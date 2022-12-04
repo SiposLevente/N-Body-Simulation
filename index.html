@@ -12,7 +12,8 @@
 <body>
     <div id="data">
         <label for="body_number">Number of bodies:</label>
-        <input onchange="InputChanged()" size="4" type="number" name="body_number" id="body_number" value="4" min="2"><br>
+        <input onchange="InputChanged()" size="4" type="number" name="body_number" id="body_number" value="4"
+            min="2"><br>
         <label for="time_flow">Time flow:</label>
         <input onchange="TimeChange()" size="4" type="number" name="time_flow" id="time_flow" value="1" min="0"><br>
         <label for="body_size">Body size:</label>
@@ -20,7 +21,9 @@
         <label for="random_mass">Random mass: </label>
         <input type="checkbox" name="random_mass" id="random_mass"><br>
         <label for="enable_trails">Trails: </label>
-        <input type="checkbox" onchange="TrailsChange()" checked="true" name="enable_trails" id="enable_trails"><br>
+        <input type="checkbox" onchange="TrailsChange()" checked="true" name="enable_trails" id="enable_trails">
+        <label for="connect_dots">Connect dots: </label>
+        <input type="checkbox" onchange="LineDotsChange()" checked="true" name="connect_dots" id="connect_dots"><br>
         <label for="auto_reset">Auto reset: </label>
         <input type="checkbox" onchange="AutoResetChange()" name="auto_reset" id="auto_reset"><br>
         <button onclick="Reset()">Generate new!</button>

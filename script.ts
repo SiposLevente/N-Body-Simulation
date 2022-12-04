@@ -195,11 +195,13 @@ const body_size_input = <HTMLInputElement>document.getElementById("body_size");
 const time_flow_input = <HTMLInputElement>document.getElementById("time_flow");
 const body_number_input = <HTMLInputElement>document.getElementById("body_number");
 const random_mass_input = <HTMLInputElement>document.getElementById("random_mass");
+const connect_dots_input = <HTMLInputElement>document.getElementById("connect_dots");
 
 let body_size = 2;
 let time_flow = 1;
 let draw_trails: boolean = trails_input.checked;
 let auto_reset: boolean = auto_reset_input.checked;
+let connect_dots:boolean = connect_dots_input.checked;
 let canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas_id");
 canvas.width = screen.width;
 canvas.height = screen.height;
@@ -236,6 +238,10 @@ function TrailsChange() {
     draw_trails = trails_input.checked;
 }
 
+function LineDotsChange() {
+    connect_dots = connect_dots_input.checked;
+}
+
 function AutoResetChange() {
     auto_reset = auto_reset_input.checked;
 }
@@ -251,7 +257,7 @@ function ResetCanvas() {
 
 function SizeChange() {
     body_size = Number.parseInt(body_size_input.value);
-    ctx.lineWidth = body_size*2;
+    ctx.lineWidth = body_size * 2;
 }
 
 function TimeChange() {
@@ -294,12 +300,14 @@ function DrawBody(body: Body) {
     if (ctx != null) {
         if (body.Position.X >= 0 && body.Position.X <= canvasWidth && body.Position.Y >= 0 && body.Position.Y <= canvasHeight) {
             ctx.beginPath();
-            ctx.lineWidth = body.Radius * 2;
             ctx.fillStyle = `rgb(${body.Color.Red},${body.Color.Green},${body.Color.Blue},${body.Color.Alpha})`;
-            ctx.strokeStyle = `rgb(${body.Color.Red},${body.Color.Green},${body.Color.Blue},${body.Color.Alpha})`;
-            ctx.moveTo(body.Position.X - body.Velocity.VX, body.Position.Y - body.Velocity.VY);
-            ctx.lineTo(body.Position.X, body.Position.Y);
-            ctx.stroke();
+            if (connect_dots) {
+                ctx.lineWidth = body.Radius * 2;
+                ctx.strokeStyle = `rgb(${body.Color.Red},${body.Color.Green},${body.Color.Blue},${body.Color.Alpha})`;
+                ctx.moveTo(body.Position.X - body.Velocity.VX, body.Position.Y - body.Velocity.VY);
+                ctx.lineTo(body.Position.X, body.Position.Y);
+                ctx.stroke();
+            }
             ctx.arc(body.Position.X, body.Position.Y, body_size, 0, 2 * Math.PI);
             ctx.fill();
         } else {
