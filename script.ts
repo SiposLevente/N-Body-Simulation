@@ -279,8 +279,11 @@ function GenerateRandomNumber(min: number, max: number): number {
 function DrawPixel(position: Postition, width: number, height: number, color: Color) {
     if (ctx != null) {
         if (position.X >= 0 && position.X <= canvasWidth && position.Y >= 0 && position.Y <= canvasHeight) {
+            ctx.beginPath();
+            ctx.arc(position.X, position.Y, body_size, 0, 2 * Math.PI);
             ctx.fillStyle = `rgb(${color.Red},${color.Green},${color.Blue},${color.Alpha})`;
-            ctx.fillRect(position.X, position.Y, width, height);
+            ctx.fill();
+            //ctx.fillRect(position.X, position.Y, width, height);
         } else {
             if (auto_reset) {
                 out_of_bounds_counter++;
