@@ -251,6 +251,7 @@ function ResetCanvas() {
 
 function SizeChange() {
     body_size = Number.parseInt(body_size_input.value);
+    ctx.lineWidth = body_size*2;
 }
 
 function TimeChange() {
@@ -289,14 +290,18 @@ function GenerateRandomNumber(min: number, max: number): number {
     }
 }
 
-function DrawPixel(position: Postition, width: number, height: number, color: Color) {
+function DrawBody(body: Body) {
     if (ctx != null) {
-        if (position.X >= 0 && position.X <= canvasWidth && position.Y >= 0 && position.Y <= canvasHeight) {
+        if (body.Position.X >= 0 && body.Position.X <= canvasWidth && body.Position.Y >= 0 && body.Position.Y <= canvasHeight) {
             ctx.beginPath();
-            ctx.arc(position.X, position.Y, body_size, 0, 2 * Math.PI);
-            ctx.fillStyle = `rgb(${color.Red},${color.Green},${color.Blue},${color.Alpha})`;
+            ctx.lineWidth = body.Radius * 2;
+            ctx.fillStyle = `rgb(${body.Color.Red},${body.Color.Green},${body.Color.Blue},${body.Color.Alpha})`;
+            ctx.strokeStyle = `rgb(${body.Color.Red},${body.Color.Green},${body.Color.Blue},${body.Color.Alpha})`;
+            ctx.moveTo(body.Position.X - body.Velocity.VX, body.Position.Y - body.Velocity.VY);
+            ctx.lineTo(body.Position.X, body.Position.Y);
+            ctx.stroke();
+            ctx.arc(body.Position.X, body.Position.Y, body_size, 0, 2 * Math.PI);
             ctx.fill();
-            //ctx.fillRect(position.X, position.Y, width, height);
         } else {
             if (auto_reset) {
                 out_of_bounds_counter++;
@@ -315,7 +320,7 @@ function sleep(ms: number) {
 
 function DrawBodies() {
     body_array.forEach(body => {
-        DrawPixel(body.Position, body_size, body_size, body.Color)
+        DrawBody(body)
     });
 }
 
