@@ -87,12 +87,14 @@ class Body {
     private position: Postition;
     private velocity: Velocity;
     private mass: number;
+    private radius: number;
     private color: Color;
 
-    constructor(x: number, y: number, vx: number, vy: number, mass: number, color: Color) {
+    constructor(x: number, y: number, vx: number, vy: number, mass: number, color: Color, radius: number) {
         this.position = new Postition(x, y);
         this.velocity = new Velocity(vx, vy);
         this.mass = mass;
+        this.radius = radius;
         this.color = color;
     }
     public get Mass() {
@@ -100,6 +102,12 @@ class Body {
     }
     public set Mass(value: number) {
         this.mass = value;
+    }
+    public get Radius() {
+        return this.radius;
+    }
+    public set Radius(value: number) {
+        this.radius = value;
     }
     public get Color() {
         return this.color;
@@ -110,6 +118,11 @@ class Body {
     public get Position() {
         return this.position;
     }
+
+    public GetCenterPosition(): Postition {
+        return new Postition(this.Position.X + this.radius / 2, this.Position.Y + this.radius / 2)
+    }
+
     public get Velocity() {
         return this.velocity;
     }
@@ -259,7 +272,7 @@ function InputChanged() {
                 mass = black_hole_mass;
             }
         }
-        body_array.push(new Body(x, y, vx, vy, mass, color))
+        body_array.push(new Body(x, y, vx, vy, mass, color, body_size))
     }
     DrawBodies();
 }
@@ -307,18 +320,18 @@ function DrawBodies() {
 }
 
 function CalculateForce(body1: Body, body2: Body) {
-    if (!body1.Position.isEquals(body2.Position)) {
-        let distance: number = body1.Position.DistanceFrom(body2.Position);
 
-        let force: number = (G * body1.Mass * body2.Mass * distance) / Math.pow(Math.abs(distance), 3);
+    let distance: number = body1.GetCenterPosition().DistanceFrom(body2.Position);
 
-        let delta_x = (body2.Position.X - body1.Position.X) * force;
-        let delta_y = (body2.Position.Y - body1.Position.Y) * force;
-        body1.Velocity.AddToVX(delta_x);
-        body1.Velocity.AddToVY(delta_y);
-        body2.Velocity.AddToVX(-delta_x);
-        body2.Velocity.AddToVY(-delta_y);
-    }
+    let force: number = (G * body1.Mass * body2.Mass * distance) / Math.pow(Math.abs(distance), 3);
+
+    let delta_x = (body2.GetCenterPosition().X - body1.GetCenterPosition().X) * force;
+    let delta_y = (body2.GetCenterPosition().Y - body1.GetCenterPosition().Y) * force;
+    body1.Velocity.AddToVX(delta_x);
+    body1.Velocity.AddToVY(delta_y);
+    body2.Velocity.AddToVX(-delta_x);
+    body2.Velocity.AddToVY(-delta_y);
+
 }
 
 function UpdateBodies() {
