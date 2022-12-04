@@ -201,7 +201,7 @@ let body_size = 2;
 let time_flow = 1;
 let draw_trails: boolean = trails_input.checked;
 let auto_reset: boolean = auto_reset_input.checked;
-let connect_dots:boolean = connect_dots_input.checked;
+let connect_dots: boolean = connect_dots_input.checked;
 let canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas_id");
 canvas.width = screen.width;
 canvas.height = screen.height;
@@ -210,6 +210,7 @@ let canvasHeight: number = canvas.height;
 let ctx: CanvasRenderingContext2D = <CanvasRenderingContext2D>canvas.getContext("2d");
 let body_array: Body[] = [];
 let out_of_bounds_counter = 0;
+ctx.lineWidth = body_size * 2;
 main();
 
 async function main() {
@@ -302,7 +303,7 @@ function DrawBody(body: Body) {
             ctx.beginPath();
             ctx.fillStyle = `rgb(${body.Color.Red},${body.Color.Green},${body.Color.Blue},${body.Color.Alpha})`;
             if (connect_dots) {
-                ctx.lineWidth = body.Radius * 2;
+
                 ctx.strokeStyle = `rgb(${body.Color.Red},${body.Color.Green},${body.Color.Blue},${body.Color.Alpha})`;
                 ctx.moveTo(body.Position.X - body.Velocity.VX, body.Position.Y - body.Velocity.VY);
                 ctx.lineTo(body.Position.X, body.Position.Y);
