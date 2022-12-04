@@ -281,10 +281,12 @@ function DrawPixel(position: Postition, width: number, height: number, color: Co
         if (position.X >= 0 && position.X <= canvasWidth && position.Y >= 0 && position.Y <= canvasHeight) {
             ctx.fillStyle = `rgb(${color.Red},${color.Green},${color.Blue},${color.Alpha})`;
             ctx.fillRect(position.X, position.Y, width, height);
-        } else if (auto_reset) {
-            out_of_bounds_counter++;
-            if (out_of_bounds_counter == body_array.length) {
-                ResetEverything();
+        } else {
+            if (auto_reset) {
+                out_of_bounds_counter++;
+                if (out_of_bounds_counter == body_array.length) {
+                    ResetEverything();
+                }
             }
         }
 

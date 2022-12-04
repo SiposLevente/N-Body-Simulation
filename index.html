@@ -22,7 +22,7 @@
         <label for="enable_trails">Trails: </label>
         <input type="checkbox" onchange="TrailsChange()" checked="true" name="enable_trails" id="enable_trails"><br>
         <label for="auto_reset">Auto reset: </label>
-        <input type="checkbox" name="auto_reset" id="auto_reset"><br>
+        <input type="checkbox" onchange="AutoResetChange()" name="auto_reset" id="auto_reset"><br>
         <button onclick="Reset()">Generate new!</button>
     </div>
     <canvas id="canvas_id" width="1500" height="1000"></canvas>
