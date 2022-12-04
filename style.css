@@ -1,0 +1,17 @@
+#data {
+    position: absolute;
+    background-color: rgba(128, 128, 128, 0.644);
+    padding: 10px;
+    z-index: 1;
+    border-radius: 10px;
+}
+
+canvas {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+
+body {
+    background-color: black;
+}

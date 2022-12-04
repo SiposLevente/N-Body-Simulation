@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>N-Bodies</title>
+</head>
+
+<body>
+    <div id="data">
+        <label for="body_number">Number of bodies:</label>
+        <input onchange="InputChanged()" size="4" type="number" name="body_number" id="body_number" value="4" min="2"><br>
+        <label for="time_flow">Time flow:</label>
+        <input onchange="TimeChange()" size="4" type="number" name="time_flow" id="time_flow" value="1" min="0"><br>
+        <label for="body_size">Body size:</label>
+        <input onchange="SizeChange()" size="4" type="number" name="body_size" id="body_size" value="1" min="1"><br>
+        <label for="random_mass">Random mass: </label>
+        <input type="checkbox" name="random_mass" id="random_mass"><br>
+        <label for="enable_trails">Trails: </label>
+        <input type="checkbox" onchange="TrailsChange()" checked="true" name="enable_trails" id="enable_trails"><br>
+        <label for="auto_reset">Auto reset: </label>
+        <input type="checkbox" name="auto_reset" id="auto_reset"><br>
+        <button onclick="Reset()">Generate new!</button>
+    </div>
+    <canvas id="canvas_id" width="1500" height="1000"></canvas>
+    <script src="output/script.js"></script>
+</body>
+
+</html>
