@@ -206,7 +206,7 @@ const base_mass = 100000;
 const default_mass = 5 * base_mass;
 const min_mass: number = 1 * base_mass;
 const max_mass: number = 10 * base_mass;
-const black_hole_mass = 2000 * base_mass;
+const black_hole_mass = 75 * base_mass;
 
 const trails_input = <HTMLInputElement>document.getElementById("enable_trails");
 const auto_reset_input = <HTMLInputElement>document.getElementById("auto_reset");
@@ -236,7 +236,6 @@ main();
 
 async function main() {
     ResetEverything();
-
     while (true) {
         for (let i = 0; i < body_array.length; i++) {
             for (let j = i + 1; j < body_array.length; j++) {
@@ -256,6 +255,10 @@ async function main() {
     }
 }
 
+function Setup() {
+
+}
+
 function TrailsChange() {
     draw_trails = trails_input.checked;
 }
@@ -267,8 +270,6 @@ function LineDotsChange() {
 function StartingVelocityMultiplierChange() {
     starting_velocity_multiplier = Number.parseInt(starting_velocity_multiplier_input.value);;
 }
-
-
 
 function AutoResetChange() {
     auto_reset = auto_reset_input.checked;
@@ -316,6 +317,7 @@ function InputChanged() {
         body_array.push(new_body);
     }
     DrawBodies();
+    Setup();
 }
 
 function ResetEverything() {
