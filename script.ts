@@ -307,7 +307,7 @@ function InputChanged() {
         let mass: number = default_mass;
         if (random_mass_input.checked) {
             mass = GenerateRandomNumber(min_mass, max_mass);
-            if (color.Red == 255 && color.Green == 255 && color.Blue == 255) {
+            if (color.Red == 0 && color.Green == 0 && color.Blue == 0) {
                 mass = black_hole_mass;
             }
         }
