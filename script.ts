@@ -303,11 +303,15 @@ function DrawBody(body: Body) {
             ctx.beginPath();
             ctx.fillStyle = `rgb(${body.Color.Red},${body.Color.Green},${body.Color.Blue},${body.Color.Alpha})`;
             if (connect_dots) {
-
+                let previous_position_x = body.Position.X - body.Velocity.VX;
+                let previous_position_y = body.Position.Y - body.Velocity.VY;
+                
                 ctx.strokeStyle = `rgb(${body.Color.Red},${body.Color.Green},${body.Color.Blue},${body.Color.Alpha})`;
-                ctx.moveTo(body.Position.X - body.Velocity.VX, body.Position.Y - body.Velocity.VY);
+                ctx.moveTo(previous_position_x, previous_position_y);
                 ctx.lineTo(body.Position.X, body.Position.Y);
                 ctx.stroke();
+                ctx.arc(previous_position_x, previous_position_y, body_size, 0, 2 * Math.PI);
+                ctx.fill();
             }
             ctx.arc(body.Position.X, body.Position.Y, body_size, 0, 2 * Math.PI);
             ctx.fill();
@@ -364,4 +368,5 @@ window.onresize = () => {
     canvas.height = screen.height;
     canvasWidth = canvas.width;
     canvasHeight = canvas.height;
+    ctx.lineWidth = body_size * 2;
 }
