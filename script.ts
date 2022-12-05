@@ -265,7 +265,7 @@ function LineDotsChange() {
 }
 
 function StartingVelocityMultiplierChange() {
-    starting_velocity_multiplier = Number.parseInt(body_size_input.value);;
+    starting_velocity_multiplier = Number.parseInt(starting_velocity_multiplier_input.value);;
 }
 
 
