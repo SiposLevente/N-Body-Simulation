@@ -373,9 +373,7 @@ function DrawBodies() {
 function CalculateForce(body1: Body, body2: Body) {
 
     let distance: number = body1.GetCenterPosition().DistanceFrom(body2.Position);
-
     let force: number = (G * body1.Mass * body2.Mass * distance) / Math.pow(Math.abs(distance), 3);
-
     let delta_x = (body2.GetCenterPosition().X - body1.GetCenterPosition().X) * force;
     let delta_y = (body2.GetCenterPosition().Y - body1.GetCenterPosition().Y) * force;
     body1.Velocity.AddToVX(delta_x);
