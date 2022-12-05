@@ -215,9 +215,11 @@ const time_flow_input = <HTMLInputElement>document.getElementById("time_flow");
 const body_number_input = <HTMLInputElement>document.getElementById("body_number");
 const random_mass_input = <HTMLInputElement>document.getElementById("random_mass");
 const connect_dots_input = <HTMLInputElement>document.getElementById("connect_dots");
+const starting_velocity_multiplier_input = <HTMLInputElement>document.getElementById("starting_velocity_multiplier");
 
-let body_size = 2;
-let time_flow = 1;
+let starting_velocity_multiplier = Number.parseInt(starting_velocity_multiplier_input.value);
+let body_size = Number.parseInt(body_size_input.value);
+let time_flow = Number.parseInt(time_flow_input.value);
 let draw_trails: boolean = trails_input.checked;
 let auto_reset: boolean = auto_reset_input.checked;
 let connect_dots: boolean = connect_dots_input.checked;
@@ -262,6 +264,12 @@ function LineDotsChange() {
     connect_dots = connect_dots_input.checked;
 }
 
+function StartingVelocityMultiplierChange() {
+    starting_velocity_multiplier = Number.parseInt(body_size_input.value);;
+}
+
+
+
 function AutoResetChange() {
     auto_reset = auto_reset_input.checked;
 }
@@ -289,11 +297,11 @@ function InputChanged() {
     console.clear();
     console.log("Generating new bodies!");
     for (let index = 0; index < Number.parseInt(body_number_input.value); index++) {
-        let x: number = GenerateRandomNumber(0, canvasWidth);
-        let y: number = GenerateRandomNumber(0, canvasHeight);
+        let x: number = GenerateRandomNumber(canvasWidth * 0.15, canvasWidth * 0.85);
+        let y: number = GenerateRandomNumber(canvasHeight * 0.15, canvasHeight * 0.85);
 
-        let vx: number = Math.random() * Math.floor(Math.random() * (3)) - 1;
-        let vy: number = Math.random() * Math.floor(Math.random() * (3)) - 1;
+        let vx: number = Number((Math.random() * Math.floor(Math.random() * (3)) - 1).toFixed(2)) * starting_velocity_multiplier;
+        let vy: number = Number((Math.random() * Math.floor(Math.random() * (3)) - 1).toFixed(2)) * starting_velocity_multiplier;
         let color: Color = Color.GenerateRandomColor();
         let mass: number = default_mass;
         if (random_mass_input.checked) {
@@ -302,7 +310,7 @@ function InputChanged() {
                 mass = black_hole_mass;
             }
         }
-        let new_body = new Body(x, y, 0, 0, mass, color, body_size);
+        let new_body = new Body(x, y, vx, vy, mass, color, body_size);
         console.log(new_body.toString());
         body_array.push(new_body);
     }
