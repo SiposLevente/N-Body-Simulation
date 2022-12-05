@@ -39,6 +39,11 @@ class Velocity {
         this.AddToVY(-num);
     }
 
+    public toString(): string {
+        return `(VX: ${this.VX}; VY: ${this.VY})`
+
+    }
+
 }
 
 class Postition {
@@ -77,6 +82,12 @@ class Postition {
     public SubFromY(num: number) {
         this.AddToY(-num);
     }
+
+    public toString(): string {
+        return `(X: ${this.X}; Y: ${this.Y})`
+
+    }
+
     public isEquals(position: Postition) {
         return (this.X == position.X) && (this.Y == position.Y);
     }
@@ -121,6 +132,10 @@ class Body {
 
     public GetCenterPosition(): Postition {
         return new Postition(this.Position.X + this.radius / 2, this.Position.Y + this.radius / 2)
+    }
+
+    public toString(): string {
+        return `Body {Starting Position: ${this.Position.toString()}, Starting Velocity: ${this.Velocity.toString()}, Mass: ${this.Mass.toString()}, Radius: ${this.radius}, Color: ${this.color.toString()}}`
     }
 
     public get Velocity() {
@@ -171,6 +186,9 @@ class Color {
         this.alpha = value;
     }
 
+    public toString(): string {
+        return `rgba(${this.red},${this.green},${this.blue},${this.alpha})`
+    }
 
     static GenerateRandomColor(): Color {
         return new Color(GenerateRandomNumber(0, 255), GenerateRandomNumber(0, 255), GenerateRandomNumber(0, 255))
@@ -188,7 +206,8 @@ const base_mass = 100000;
 const default_mass = 5 * base_mass;
 const min_mass: number = 1 * base_mass;
 const max_mass: number = 10 * base_mass;
-const black_hole_mass = 20 * base_mass;
+const black_hole_mass = 2000 * base_mass;
+
 const trails_input = <HTMLInputElement>document.getElementById("enable_trails");
 const auto_reset_input = <HTMLInputElement>document.getElementById("auto_reset");
 const body_size_input = <HTMLInputElement>document.getElementById("body_size");
@@ -267,10 +286,13 @@ function TimeChange() {
 
 function InputChanged() {
     ResetCanvas()
+    console.clear();
+    console.log("Generating new bodies!");
     for (let index = 0; index < Number.parseInt(body_number_input.value); index++) {
         let x: number = GenerateRandomNumber(0, canvasWidth);
-        let vx: number = Math.random() * Math.floor(Math.random() * (3)) - 1;
         let y: number = GenerateRandomNumber(0, canvasHeight);
+
+        let vx: number = Math.random() * Math.floor(Math.random() * (3)) - 1;
         let vy: number = Math.random() * Math.floor(Math.random() * (3)) - 1;
         let color: Color = Color.GenerateRandomColor();
         let mass: number = default_mass;
@@ -280,7 +302,9 @@ function InputChanged() {
                 mass = black_hole_mass;
             }
         }
-        body_array.push(new Body(x, y, vx, vy, mass, color, body_size))
+        let new_body = new Body(x, y, 0, 0, mass, color, body_size);
+        console.log(new_body.toString());
+        body_array.push(new_body);
     }
     DrawBodies();
 }
@@ -305,7 +329,7 @@ function DrawBody(body: Body) {
             if (connect_dots) {
                 let previous_position_x = body.Position.X - body.Velocity.VX;
                 let previous_position_y = body.Position.Y - body.Velocity.VY;
-                
+
                 ctx.strokeStyle = `rgb(${body.Color.Red},${body.Color.Green},${body.Color.Blue},${body.Color.Alpha})`;
                 ctx.moveTo(previous_position_x, previous_position_y);
                 ctx.lineTo(body.Position.X, body.Position.Y);
