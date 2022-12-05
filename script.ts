@@ -1,18 +1,25 @@
 class Velocity {
     private vx: number;
     private vy: number;
+    private vz: number;
 
-    constructor(x: number, y: number) {
+    constructor(x: number, y: number, z: number) {
         this.vx = x;
         this.vy = y;
+        this.vz = z;
     }
 
     public InvertVx() {
         this.vx = -this.vx;
     }
 
+
     public InvertVy() {
         this.vy = -this.vy;
+    }
+
+    public InvertVz() {
+        this.vz = -this.vz;
     }
 
     public get VX(): number {
@@ -23,12 +30,20 @@ class Velocity {
         return this.vy;
     }
 
+    public get VZ(): number {
+        return this.vz;
+    }
+
     public AddToVX(num: number) {
         this.vx += num;
     }
 
     public AddToVY(num: number) {
         this.vy += num;
+    }
+
+    public AddToVZ(num: number) {
+        this.vz += num;
     }
 
     public SubFromVX(num: number) {
@@ -39,8 +54,12 @@ class Velocity {
         this.AddToVY(-num);
     }
 
+    public SubFromVZ(num: number) {
+        this.AddToVZ(-num);
+    }
+
     public toString(): string {
-        return `(VX: ${this.VX}; VY: ${this.VY})`
+        return `(VX: ${this.VX}; VY: ${this.VY}; VZ:${this.VZ})`
 
     }
 
@@ -49,10 +68,12 @@ class Velocity {
 class Postition {
     private x: number;
     private y: number;
+    private z: number;
 
-    constructor(x: number, y: number) {
+    constructor(x: number, y: number, z: number) {
         this.x = x;
         this.y = y;
+        this.z = z;
     }
 
     public DistanceFrom(other_pos: Postition) {
@@ -67,11 +88,19 @@ class Postition {
         return this.y;
     }
 
+    public get Z(): number {
+        return this.y;
+    }
+
     public AddToX(num: number) {
         this.x += num;
     }
 
     public AddToY(num: number) {
+        this.y += num;
+    }
+
+    public AddToZ(num: number) {
         this.y += num;
     }
 
@@ -83,13 +112,17 @@ class Postition {
         this.AddToY(-num);
     }
 
+    public SubFromZ(num: number) {
+        this.AddToY(-num);
+    }
+
     public toString(): string {
-        return `(X: ${this.X}; Y: ${this.Y})`
+        return `(X: ${this.X}; Y: ${this.Y}; Z:${this.Z})`
 
     }
 
     public isEquals(position: Postition) {
-        return (this.X == position.X) && (this.Y == position.Y);
+        return (this.X == position.X) && (this.Y == position.Y) && (this.Z == position.Z);
     }
 
 }
@@ -101,9 +134,9 @@ class Body {
     private radius: number;
     private color: Color;
 
-    constructor(x: number, y: number, vx: number, vy: number, mass: number, color: Color, radius: number) {
-        this.position = new Postition(x, y);
-        this.velocity = new Velocity(vx, vy);
+    constructor(x: number, y: number, z: number, vx: number, vy: number, vz: number, mass: number, color: Color, radius: number) {
+        this.position = new Postition(x, y, z);
+        this.velocity = new Velocity(vx, vy, vz);
         this.mass = mass;
         this.radius = radius;
         this.color = color;
@@ -131,7 +164,7 @@ class Body {
     }
 
     public GetCenterPosition(): Postition {
-        return new Postition(this.Position.X + this.radius / 2, this.Position.Y + this.radius / 2)
+        return new Postition(this.Position.X + this.radius / 2, this.Position.Y + this.radius / 2, this.Position.Z + this.radius / 2)
     }
 
     public toString(): string {
@@ -141,13 +174,15 @@ class Body {
     public get Velocity() {
         return this.velocity;
     }
-    OffsetVelocity(dvx: number, dvy: number) {
+    OffsetVelocity(dvx: number, dvy: number, dvz: number) {
         this.velocity.AddToVX(dvx);
         this.velocity.AddToVY(dvy);
+        this.velocity.AddToVY(dvz);
     }
-    OffsetPosition(dx: number, dy: number) {
+    OffsetPosition(dx: number, dy: number, dz: number) {
         this.position.AddToX(dx);
         this.position.AddToY(dy);
+        this.position.AddToZ(dz);
     }
 }
 
@@ -228,6 +263,8 @@ canvas.width = screen.width;
 canvas.height = screen.height;
 let canvasWidth: number = canvas.width;
 let canvasHeight: number = canvas.height;
+let canvasDepth: number = 12;
+
 let ctx: CanvasRenderingContext2D = <CanvasRenderingContext2D>canvas.getContext("2d");
 let body_array: Body[] = [];
 let out_of_bounds_counter = 0;
@@ -299,9 +336,11 @@ function InputChanged() {
     for (let index = 0; index < Number.parseInt(body_number_input.value); index++) {
         let x: number = Math.floor(GenerateRandomNumber(canvasWidth * 0.15, canvasWidth * 0.85));
         let y: number = Math.floor(GenerateRandomNumber(canvasHeight * 0.15, canvasHeight * 0.85));
+        let z: number = Math.floor(GenerateRandomNumber(canvasDepth * 0.15, canvasDepth * 0.85));
 
-        let vx: number = Number(((Math.random() * Math.floor(Math.random() * (3)) - 1) * starting_velocity_multiplier).toFixed(2));
+        let vx: number = Number((Math.random() * Math.floor(Math.random() * (3) * starting_velocity_multiplier) - 1).toFixed(2));
         let vy: number = Number((Math.random() * Math.floor(Math.random() * (3) * starting_velocity_multiplier) - 1).toFixed(2));
+        let vz: number = Number((Math.random() * Math.floor(Math.random() * (3) * starting_velocity_multiplier) - 1).toFixed(2));
 
         let color: Color = Color.GenerateRandomColor();
         let mass: number = default_mass;
@@ -311,7 +350,7 @@ function InputChanged() {
                 mass = black_hole_mass;
             }
         }
-        let new_body = new Body(x, y, vx, vy, mass, color, body_size);
+        let new_body = new Body(x, y, z, vx, vy, vz, mass, color, body_size);
         console.log(new_body.toString());
         body_array.push(new_body);
     }
@@ -332,21 +371,40 @@ function GenerateRandomNumber(min: number, max: number): number {
 
 function DrawBody(body: Body) {
     if (ctx != null) {
-        if (body.Position.X >= 0 && body.Position.X <= canvasWidth && body.Position.Y >= 0 && body.Position.Y <= canvasHeight) {
+        if ((body.Position.X >= 0 && body.Position.X <= canvasWidth) && (body.Position.Y >= 0 && body.Position.Y <= canvasHeight) && (body.Position.Z >= 0)) {
             ctx.beginPath();
-            ctx.fillStyle = `rgb(${body.Color.Red},${body.Color.Green},${body.Color.Blue},${body.Color.Alpha})`;
-            if (connect_dots) {
-                let previous_position_x = body.Position.X - body.Velocity.VX;
-                let previous_position_y = body.Position.Y - body.Velocity.VY;
 
-                ctx.strokeStyle = `rgb(${body.Color.Red},${body.Color.Green},${body.Color.Blue},${body.Color.Alpha})`;
+            let distance = body.Position.Z;
+            console.log(distance);
+            let red: number = ((distance + 100) / canvasHeight * 2) * body.Color.Red;
+            if (red > 255) {
+                red = 255;
+            }
+            let green: number = ((distance + 100) / canvasHeight * 2) * body.Color.Green;
+            if (green > 255) {
+                green = 255;
+            }
+            let blue: number = ((distance + 100) / canvasHeight * 2) * body.Color.Blue;
+            if (blue > 255) {
+                blue = 255;
+            }
+
+            ctx.fillStyle = `rgb(${red},${green},${blue})`;
+
+            if (connect_dots) {
+                let previous_position_x = body.GetCenterPosition().X - body.Velocity.VX;
+                let previous_position_y = body.GetCenterPosition().Y - body.Velocity.VY;
+
+
+                ctx.lineWidth = body.Position.Z / 50 * 2;
+                ctx.strokeStyle = `rgb(${red},${green},${blue})`;
                 ctx.moveTo(previous_position_x, previous_position_y);
-                ctx.lineTo(body.Position.X, body.Position.Y);
+                ctx.lineTo(body.GetCenterPosition().X, body.GetCenterPosition().Y);
                 ctx.stroke();
-                ctx.arc(previous_position_x, previous_position_y, body_size, 0, 2 * Math.PI);
+                ctx.arc(previous_position_x, previous_position_y, body.Position.Z / 50, 0, 2 * Math.PI);
                 ctx.fill();
             }
-            ctx.arc(body.Position.X, body.Position.Y, body_size, 0, 2 * Math.PI);
+            ctx.arc(body.Position.X, body.Position.Y, body.Position.Z / 50, 0, 2 * Math.PI);
             ctx.fill();
         } else {
             if (auto_reset) {
@@ -376,10 +434,15 @@ function CalculateForce(body1: Body, body2: Body) {
     let force: number = (G * body1.Mass * body2.Mass * distance) / Math.pow(Math.abs(distance), 3);
     let delta_x = (body2.GetCenterPosition().X - body1.GetCenterPosition().X) * force;
     let delta_y = (body2.GetCenterPosition().Y - body1.GetCenterPosition().Y) * force;
+    let delta_z = (body2.GetCenterPosition().Z - body1.GetCenterPosition().Z) * force;
+
     body1.Velocity.AddToVX(delta_x);
     body1.Velocity.AddToVY(delta_y);
+    body1.Velocity.AddToVZ(delta_z);
+
     body2.Velocity.AddToVX(-delta_x);
     body2.Velocity.AddToVY(-delta_y);
+    body2.Velocity.AddToVZ(-delta_z);
 
 }
 
@@ -387,6 +450,7 @@ function UpdateBodies() {
     body_array.forEach(body => {
         body.Position.AddToX(body.Velocity.VX);
         body.Position.AddToY(body.Velocity.VY);
+        body.Position.AddToZ(body.Velocity.VZ);
     });
 }
 
