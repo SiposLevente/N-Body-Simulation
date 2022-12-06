@@ -258,7 +258,7 @@ async function main() {
 }
 
 function Setup() {
-   
+
 }
 
 function TrailsChange() {
@@ -334,25 +334,33 @@ function GenerateRandomNumber(min: number, max: number): number {
     }
 }
 
+function DrawLine(line_starting_coordinate: Postition, line_ending_coordinate: Postition, color: Color, width: number) {
+    ctx.beginPath();
+    ctx.strokeStyle = `rgb(${color.Red},${color.Green},${color.Blue},${color.Alpha})`;
+    ctx.lineWidth = width;
+    ctx.moveTo(line_starting_coordinate.X, line_starting_coordinate.Y);
+    ctx.lineTo(line_ending_coordinate.X, line_ending_coordinate.Y);
+    ctx.stroke();
+}
+
+function DrawDot(position: Postition, color: Color, radius: number) {
+    ctx.beginPath();
+    ctx.fillStyle = `rgb(${color.Red},${color.Green},${color.Blue},${color.Alpha})`;
+    ctx.arc(position.X, position.Y, radius, 0, 2 * Math.PI);
+    ctx.fill();
+}
+
 function DrawBody(body: Body) {
     if (ctx != null) {
         if (body.Position.X >= 0 && body.Position.X <= canvasWidth && body.Position.Y >= 0 && body.Position.Y <= canvasHeight) {
-            ctx.beginPath();
-            ctx.fillStyle = `rgb(${body.Color.Red},${body.Color.Green},${body.Color.Blue},${body.Color.Alpha})`;
             if (connect_dots) {
-                let previous_position_x = body.Position.X - body.Velocity.VX;
-                let previous_position_y = body.Position.Y - body.Velocity.VY;
-
-                ctx.strokeStyle = `rgb(${body.Color.Red},${body.Color.Green},${body.Color.Blue},${body.Color.Alpha})`;
-                ctx.lineWidth = body.Radius * 2;
-                ctx.moveTo(previous_position_x, previous_position_y);
-                ctx.lineTo(body.Position.X, body.Position.Y);
-                ctx.stroke();
-                ctx.arc(previous_position_x, previous_position_y, body.Radius, 0, 2 * Math.PI);
-                ctx.fill();
+                let previous_position = new Postition(body.Position.X - body.Velocity.VX, body.Position.Y - body.Velocity.VY);
+                if (!draw_trails) {
+                    DrawDot(previous_position, body.Color, body.Radius);
+                }
+                DrawLine(previous_position, body.Position, body.Color, body.Radius * 2);
             }
-            ctx.arc(body.Position.X, body.Position.Y, body.Radius, 0, 2 * Math.PI);
-            ctx.fill();
+            DrawDot(body.Position, body.Color, body.Radius);
         } else {
             if (auto_reset) {
                 out_of_bounds_counter++;
@@ -361,7 +369,6 @@ function DrawBody(body: Body) {
                 }
             }
         }
-
     }
 }
 
