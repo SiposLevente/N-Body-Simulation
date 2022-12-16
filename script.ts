@@ -67,6 +67,14 @@ class Postition {
         return this.y;
     }
 
+    public set X(value: number) {
+        this.x = value;
+    }
+
+    public set Y(value: number) {
+        this.y = value;
+    }
+
     public AddToX(num: number) {
         this.x += num;
     }
@@ -216,6 +224,7 @@ const body_number_input = <HTMLInputElement>document.getElementById("body_number
 const random_mass_input = <HTMLInputElement>document.getElementById("random_mass");
 const connect_dots_input = <HTMLInputElement>document.getElementById("connect_dots");
 const starting_velocity_multiplier_input = <HTMLInputElement>document.getElementById("starting_velocity_multiplier");
+const wrap_input = <HTMLInputElement>document.getElementById("wrap");
 
 let starting_velocity_multiplier = Number.parseInt(starting_velocity_multiplier_input.value);
 let body_size = Number.parseInt(body_size_input.value);
@@ -223,6 +232,7 @@ let time_flow = Number.parseInt(time_flow_input.value);
 let draw_trails: boolean = trails_input.checked;
 let auto_reset: boolean = auto_reset_input.checked;
 let connect_dots: boolean = connect_dots_input.checked;
+let wrap_dots: boolean = wrap_input.checked;
 let canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas_id");
 canvas.width = screen.width;
 canvas.height = screen.height;
@@ -295,6 +305,10 @@ function TimeChange() {
     time_flow = Number.parseInt(time_flow_input.value);
 }
 
+function WrapChange() {
+    wrap_dots = wrap_input.checked;
+}
+
 function InputChanged() {
     ResetCanvas()
     console.clear();
@@ -352,7 +366,8 @@ function DrawDot(position: Postition, color: Color, radius: number) {
 
 function DrawBody(body: Body) {
     if (ctx != null) {
-        if (body.Position.X >= 0 && body.Position.X <= canvasWidth && body.Position.Y >= 0 && body.Position.Y <= canvasHeight) {
+
+        if (isBodyOnScreen(body)) {
             if (connect_dots) {
                 let previous_position = new Postition(body.Position.X - body.Velocity.VX, body.Position.Y - body.Velocity.VY);
                 if (!draw_trails) {
@@ -399,11 +414,31 @@ function UpdateBodies() {
     body_array.forEach(body => {
         body.Position.AddToX(body.Velocity.VX);
         body.Position.AddToY(body.Velocity.VY);
+        if (wrap_dots) {
+            if (!isBodyOnScreen(body)) {
+                if (body.Position.X < 0) {
+                    body.Position.X = canvasWidth;
+                }
+                if (body.Position.X > canvasWidth) {
+                    body.Position.X = 0;
+                }
+                if (body.Position.Y < 0) {
+                    body.Position.Y = canvasHeight;
+                }
+                if (body.Position.Y > canvasHeight) {
+                    body.Position.Y = 0;
+                }
+            }
+        }
     });
 }
 
 function Reset() {
     ResetEverything();
+}
+
+function isBodyOnScreen(body: Body): boolean {
+    return body.Position.X >= 0 && body.Position.X <= canvasWidth && body.Position.Y >= 0 && body.Position.Y <= canvasHeight;
 }
 
 window.onresize = () => {

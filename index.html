@@ -28,6 +28,8 @@
         <input type="checkbox" onchange="LineDotsChange()" checked="true" name="connect_dots" id="connect_dots"><br>
         <label for="auto_reset">Auto reset: </label>
         <input type="checkbox" onchange="AutoResetChange()" name="auto_reset" id="auto_reset"><br>
+        <label for="wrap">Wrap plane: </label>
+        <input type="checkbox" onchange="WrapChange()" name="wrap" id="wrap"><br>
         <button onclick="Reset()">Generate new!</button>
     </div>
     <canvas id="canvas_id" width="1500" height="1000"></canvas>
