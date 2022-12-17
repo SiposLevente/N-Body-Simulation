@@ -1,3 +1,5 @@
+// ============================= Velocity =============================
+
 class Velocity {
     private vx: number;
     private vy: number;
@@ -45,6 +47,8 @@ class Velocity {
     }
 
 }
+
+// ============================= Position =============================
 
 class Postition {
     private x: number;
@@ -101,6 +105,8 @@ class Postition {
     }
 
 }
+
+// ============================= Body =============================
 
 class Body {
     private position: Postition;
@@ -159,6 +165,8 @@ class Body {
     }
 }
 
+// ============================= Color =============================
+
 class Color {
     private red: number;
     public get Red(): number {
@@ -209,6 +217,19 @@ class Color {
         this.alpha = 1.0;
     }
 }
+
+// ============================= Common functions =============================
+
+function GenerateRandomNumber(min: number, max: number): number {
+    if (max >= min) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    } else {
+        throw new RangeError("ERROR! Minimum number must be smaller or equal to maximum number!");
+    }
+}
+
+// ============================= Main =============================
+
 const G: number = 6.673e-11;
 const base_mass = 100000;
 const default_mass = 5 * base_mass;
@@ -267,6 +288,7 @@ async function main() {
     }
 }
 
+// Put initial starting state here
 function Setup() {
 
 }
@@ -338,14 +360,6 @@ function InputChanged() {
 
 function ResetEverything() {
     InputChanged();
-}
-
-function GenerateRandomNumber(min: number, max: number): number {
-    if (max >= min) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-    } else {
-        throw new RangeError("ERROR! Minimum number must be smaller or equal to maximum number!");
-    }
 }
 
 function DrawLine(line_starting_coordinate: Postition, line_ending_coordinate: Postition, color: Color, width: number) {
