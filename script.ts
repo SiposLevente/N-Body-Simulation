@@ -340,7 +340,7 @@ function InputChanged() {
         let y: number = Math.floor(GenerateRandomNumber(canvasHeight * 0.15, canvasHeight * 0.85));
 
         let vx: number = Number(((Math.random() * Math.floor(Math.random() * (3)) - 1) * starting_velocity_multiplier).toFixed(2));
-        let vy: number = Number((Math.random() * Math.floor(Math.random() * (3) * starting_velocity_multiplier) - 1).toFixed(2));
+        let vy: number = Number(((Math.random() * Math.floor(Math.random() * (3)) - 1) * starting_velocity_multiplier).toFixed(2));
 
         let color: Color = Color.GenerateRandomColor();
         let mass: number = default_mass;
