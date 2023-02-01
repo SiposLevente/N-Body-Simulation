@@ -262,30 +262,46 @@ let canvasHeight: number = canvas.height;
 let ctx: CanvasRenderingContext2D = <CanvasRenderingContext2D>canvas.getContext("2d");
 let body_array: Body[] = [];
 let out_of_bounds_counter = 0;
+let requiredElapsed = 1000 / time_flow;
 ctx.lineWidth = body_size * 2;
 main();
 
 async function main() {
     ResetEverything();
-    while (true) {
-        for (let i = 0; i < body_array.length; i++) {
-            for (let j = i; j < body_array.length; j++) {
-                if (i != j) {
-                    CalculateForce(body_array[i], body_array[j]);
+
+    let lastTime = 0;
+
+    requestAnimationFrame(loop);
+
+    function loop(now: number) {
+        requestAnimationFrame(loop);
+
+        if (!lastTime) { lastTime = now; }
+        const elapsed = now - lastTime;
+
+        if (elapsed > requiredElapsed) {
+            for (let i = 0; i < body_array.length; i++) {
+                for (let j = i; j < body_array.length; j++) {
+                    if (i != j) {
+                        CalculateForce(body_array[i], body_array[j]);
+                    }
                 }
             }
+
+            if (!draw_trails) {
+                ClearCanvas();
+            }
+
+            UpdateBodies();
+            DrawBodies();
+
+            out_of_bounds_counter = 0;
+
+            lastTime = now;
         }
-
-        if (!draw_trails) {
-            ClearCanvas();
-        }
-
-        UpdateBodies();
-        DrawBodies();
-
-        out_of_bounds_counter = 0;
-        await sleep(time_flow);
     }
+
+    loop(0);
 }
 
 // Put initial starting state here
@@ -325,6 +341,7 @@ function SizeChange() {
 
 function TimeChange() {
     time_flow = Number.parseInt(time_flow_input.value);
+    requiredElapsed = 1000 / time_flow;
 }
 
 function WrapChange() {
