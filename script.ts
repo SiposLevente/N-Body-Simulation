@@ -231,10 +231,10 @@ function GenerateRandomNumber(min: number, max: number): number {
 // ============================= Main =============================
 
 const G: number = 6.673e-11;
-const base_mass = 100000;
+const base_mass = 500000;
 const default_mass = 5 * base_mass;
 const min_mass: number = 1 * base_mass;
-const max_mass: number = 10 * base_mass;
+const max_mass: number = 20 * base_mass;
 const black_hole_mass = 75 * base_mass;
 
 const trails_input = <HTMLInputElement>document.getElementById("enable_trails");
@@ -264,6 +264,7 @@ let body_array: Body[] = [];
 let out_of_bounds_counter = 0;
 let requiredElapsed = 1000 / time_flow;
 ctx.lineWidth = body_size * 2;
+let delta = 0;
 main();
 
 async function main() {
@@ -280,6 +281,7 @@ async function main() {
         const elapsed = now - lastTime;
 
         if (elapsed > requiredElapsed) {
+            delta = elapsed / 1000;
             for (let i = 0; i < body_array.length; i++) {
                 for (let j = i; j < body_array.length; j++) {
                     if (i != j) {
@@ -292,7 +294,7 @@ async function main() {
                 ClearCanvas();
             }
 
-            UpdateBodies();
+            UpdateBodies(delta);
             DrawBodies();
 
             out_of_bounds_counter = 0;
@@ -400,7 +402,7 @@ function DrawBody(body: Body) {
 
         if (isBodyOnScreen(body)) {
             if (connect_dots) {
-                let previous_position = new Postition(body.Position.X - body.Velocity.VX, body.Position.Y - body.Velocity.VY);
+                let previous_position = new Postition(body.Position.X - body.Velocity.VX * delta, body.Position.Y - body.Velocity.VY * delta);
                 if (!draw_trails) {
                     DrawDot(previous_position, body.Color, body.Radius);
                 }
@@ -441,10 +443,10 @@ function CalculateForce(body1: Body, body2: Body) {
 
 }
 
-function UpdateBodies() {
+function UpdateBodies(delta: number) {
     body_array.forEach(body => {
-        body.Position.AddToX(body.Velocity.VX);
-        body.Position.AddToY(body.Velocity.VY);
+        body.Position.AddToX(body.Velocity.VX * delta);
+        body.Position.AddToY(body.Velocity.VY * delta);
         if (wrap_dots) {
             if (!isBodyOnScreen(body)) {
                 if (body.Position.X < 0) {
