@@ -255,8 +255,8 @@ let auto_reset: boolean = auto_reset_input.checked;
 let connect_dots: boolean = connect_dots_input.checked;
 let wrap_dots: boolean = wrap_input.checked;
 let canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById("canvas_id");
-canvas.width = screen.width;
-canvas.height = screen.height;
+canvas.width = document.documentElement.clientWidth;
+canvas.height = document.documentElement.clientHeight;
 let canvasWidth: number = canvas.width;
 let canvasHeight: number = canvas.height;
 let ctx: CanvasRenderingContext2D = <CanvasRenderingContext2D>canvas.getContext("2d");
@@ -473,10 +473,11 @@ function Reset() {
 function isBodyOnScreen(body: Body): boolean {
     return body.Position.X >= 0 && body.Position.X <= canvasWidth && body.Position.Y >= 0 && body.Position.Y <= canvasHeight;
 }
-
 window.onresize = () => {
-    canvas.width = screen.width;
-    canvas.height = screen.height;
+    console.log("alma");
+    
+    canvas.width = document.documentElement.clientWidth;
+    canvas.height = document.documentElement.clientHeight;
     canvasWidth = canvas.width;
     canvasHeight = canvas.height;
     ctx.lineWidth = body_size * 2;
